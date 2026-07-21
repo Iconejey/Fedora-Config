@@ -14,7 +14,7 @@ echo -e "${BANNER}                                     ${NC}\n"
 
 # 1. Install Fedora system packages via dnf
 echo -e "${CYAN}[1/7] Installing packages via DNF...${NC}"
-REQUIRED_PKGS=(kitty zsh zsh-autosuggestions zsh-syntax-highlighting nodejs npm git curl)
+REQUIRED_PKGS=(zsh zsh-autosuggestions zsh-syntax-highlighting nodejs npm git curl)
 MISSING_PKGS=()
 
 for pkg in "${REQUIRED_PKGS[@]}"; do
@@ -87,11 +87,12 @@ create_symlink() {
 create_symlink "$SCRIPT_DIR/configs/zsh/.zshrc" "$HOME/.zshrc" ".zshrc"
 create_symlink "$SCRIPT_DIR/configs/zsh/.zprofile" "$HOME/.zprofile" ".zprofile"
 
-# Link kitty config directory
-if [ -d "$HOME/.config/kitty" ] && [ ! -L "$HOME/.config/kitty" ] && [ -z "$(ls -A "$HOME/.config/kitty" 2>/dev/null)" ]; then
-    rmdir "$HOME/.config/kitty"
-fi
-create_symlink "$SCRIPT_DIR/configs/kitty" "$HOME/.config/kitty" "kitty"
+# Link micro config files
+create_symlink "$SCRIPT_DIR/configs/micro/bindings.json" "$HOME/.config/micro/bindings.json" "micro bindings"
+create_symlink "$SCRIPT_DIR/configs/micro/settings.json" "$HOME/.config/micro/settings.json" "micro settings"
+create_symlink "$SCRIPT_DIR/configs/micro/init.lua" "$HOME/.config/micro/init.lua" "micro init.lua"
+create_symlink "$SCRIPT_DIR/configs/micro/colorschemes/vscode-custom.micro" "$HOME/.config/micro/colorschemes/vscode-custom.micro" "micro vscode-custom colorscheme"
+create_symlink "$SCRIPT_DIR/configs/micro/syntax/javascript.yaml" "$HOME/.config/micro/syntax/javascript.yaml" "micro javascript syntax"
 
 # 5. Set default shell to Zsh
 echo -e "\n${CYAN}[5/7] Changing default shell to Zsh...${NC}"
@@ -117,8 +118,8 @@ else
     echo -e "${GREEN}Microsoft fonts are already installed.${NC}"
 fi
 
-# 7. Configure Ptyxis (Default Terminal) with Kitty colors
-echo -e "\n${CYAN}[7/7] Configuring Ptyxis (Default Terminal) with Material Theme Darker...${NC}"
+# 7. Configure Ptyxis (Default Terminal) with Material Theme Darker
+echo -e "\n${CYAN}[7/7] Configuring Ptyxis (Default Terminal) with Material Theme Darker and Ctrl+T shortcut...${NC}"
 PTYXIS_PALETTES_DIR="$HOME/.local/share/org.gnome.Ptyxis/palettes"
 mkdir -p "$PTYXIS_PALETTES_DIR"
 cp "$SCRIPT_DIR/configs/ptyxis/Material-Theme-Darker.palette" "$PTYXIS_PALETTES_DIR/"
@@ -130,6 +131,15 @@ if [ -n "$UUID" ]; then
 else
     echo -e "${YELLOW}⚠️ Could not find default Ptyxis profile UUID. Palette installed, but you may need to select it manually in Ptyxis Preferences.${NC}"
 fi
+
+# Configure Ctrl+T to open a new tab in Ptyxis
+gsettings set org.gnome.Ptyxis.Shortcuts new-tab '<ctrl>t'
+echo -e "${GREEN}✅ Configured Ctrl+T to open a new tab in Ptyxis.${NC}"
+
+# Configure Shift+Ctrl+Left/Right to navigate tabs in Ptyxis
+gsettings set org.gnome.Ptyxis.Shortcuts move-previous-tab '<ctrl><shift>Left'
+gsettings set org.gnome.Ptyxis.Shortcuts move-next-tab '<ctrl><shift>Right'
+echo -e "${GREEN}✅ Configured Shift+Ctrl+Left and Shift+Ctrl+Right to navigate tabs in Ptyxis.${NC}"
 
 echo -e "\n${BANNER}                          ${NC}"
 echo -e "${BANNER}  Installation Complete!  ${NC}"
