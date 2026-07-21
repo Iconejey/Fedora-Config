@@ -133,3 +133,7 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # Prevents Zsh from parsing wildcards or question marks before passing them to Nono
 alias nono="noglob node $HOME/autre/Nono-CLI/index.js"
+
+# Default Editor Configuration
+export EDITOR="/usr/bin/micro"
+export VISUAL="/usr/bin/micro"
