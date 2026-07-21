@@ -29,7 +29,7 @@ function spawnKittyTab(bp)
 	local second_y = bp.Cursor.CurSelection[2].Y
 	local start_line = math.min(first_y, second_y) + 1
 	local end_line = math.max(first_y, second_y) + 1
-	shell.RunCommand(string.format("kitten @ launch --type=tab %s/.local/bin/nono -f %s:%d-%d", os.getenv("HOME"), abs_path, start_line, end_line))
+	shell.RunCommand(string.format("ptyxis --tab -- zsh -ic '%s/.local/bin/nono -f %s:%d-%d; exec zsh'", os.getenv("HOME"), abs_path, start_line, end_line))
 end
 
 function scrollLeft(bp)
@@ -44,4 +44,13 @@ function scrollRight(bp)
 	local scroll_amount = 4
 	v.StartCol = v.StartCol + scroll_amount
 	bp:SetView(v)
+end
+
+function runNomarkNonInteractive(bp)
+	local abs_path = bp.Buf.AbsPath
+	if not abs_path or abs_path == "" then return end
+	if bp.Buf:Modified() then
+		bp.Buf:Save()
+	end
+	shell.RunCommand(string.format("ptyxis --tab -- zsh -c 'nomark %q; read'", abs_path))
 end
