@@ -64,6 +64,7 @@ rules:
     - constant.string:
           start: '`'
           end: '`'
+          skip: "\\\\."
           rules:
               - constant.specialChar: "\\\\."
               - identifier: "\\x24\\{.*?\\}"
