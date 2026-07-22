@@ -5,6 +5,7 @@
 	"Alt-Shift-Down": "Duplicate|DuplicateLine",
 	"Alt-Shift-Up": "Duplicate|DuplicateLine,MoveLinesUp",
 	"Ctrl-Shift-T": "AddTab",
+	"Alt-G": "command:diff-preview",
 	"Ctrl-t": "None",
 	"Alt-v": "VSplit",
 	"Ctrl-q": "None",

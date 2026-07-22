@@ -93,6 +93,7 @@ create_symlink "$SCRIPT_DIR/configs/micro/settings.json" "$HOME/.config/micro/se
 create_symlink "$SCRIPT_DIR/configs/micro/init.lua" "$HOME/.config/micro/init.lua" "micro init.lua"
 create_symlink "$SCRIPT_DIR/configs/micro/colorschemes/vscode-custom.micro" "$HOME/.config/micro/colorschemes/vscode-custom.micro" "micro vscode-custom colorscheme"
 create_symlink "$SCRIPT_DIR/configs/micro/syntax/javascript.yaml" "$HOME/.config/micro/syntax/javascript.yaml" "micro javascript syntax"
+create_symlink "$SCRIPT_DIR/configs/micro/plug/micro-diff-preview" "$HOME/.config/micro/plug/micro-diff-preview" "micro diff preview plugin"
 
 # 5. Set default shell to Zsh
 echo -e "\n${CYAN}[5/7] Changing default shell to Zsh...${NC}"
