@@ -13,7 +13,7 @@ echo -e "${BANNER}  Starting Fedora Init Installation  ${NC}"
 echo -e "${BANNER}                                     ${NC}\n"
 
 # 1. Install Fedora system packages via dnf
-echo -e "${CYAN}[1/7] Installing packages via DNF...${NC}"
+echo -e "${CYAN}[1/8] Installing packages via DNF...${NC}"
 REQUIRED_PKGS=(zsh zsh-autosuggestions zsh-syntax-highlighting nodejs npm git curl)
 MISSING_PKGS=()
 
@@ -32,7 +32,7 @@ else
 fi
 
 # 2. Install Oh My Zsh
-echo -e "\n${CYAN}[2/7] Installing Oh My Zsh...${NC}"
+echo -e "\n${CYAN}[2/8] Installing Oh My Zsh...${NC}"
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     echo -e "${YELLOW}Installing Oh My Zsh unattended...${NC}"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
@@ -41,7 +41,7 @@ else
 fi
 
 # 3. Clone custom Zsh plugins locally (as fallback)
-echo -e "\n${CYAN}[3/7] Setting up local Zsh plugins...${NC}"
+echo -e "\n${CYAN}[3/8] Setting up local Zsh plugins...${NC}"
 ZSH_CUSTOM_PLUGINS="$HOME/.oh-my-zsh/custom/plugins"
 mkdir -p "$ZSH_CUSTOM_PLUGINS"
 
@@ -57,7 +57,7 @@ fi
 echo -e "${GREEN}Zsh plugins setup completed.${NC}"
 
 # 4. Set up configuration symlinks
-echo -e "\n${CYAN}[4/7] Setting up configuration symlinks...${NC}"
+echo -e "\n${CYAN}[4/8] Setting up configuration symlinks...${NC}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Helper function to create safe links
@@ -88,7 +88,7 @@ create_symlink "$SCRIPT_DIR/configs/zsh/.zshrc" "$HOME/.zshrc" ".zshrc"
 create_symlink "$SCRIPT_DIR/configs/zsh/.zprofile" "$HOME/.zprofile" ".zprofile"
 
 # 5. Set default shell to Zsh
-echo -e "\n${CYAN}[5/7] Changing default shell to Zsh...${NC}"
+echo -e "\n${CYAN}[5/8] Changing default shell to Zsh...${NC}"
 CURRENT_SHELL="$(getent passwd "$USER" | cut -d: -f7)"
 ZSH_PATH="$(which zsh 2>/dev/null || echo '/usr/bin/zsh')"
 
@@ -100,7 +100,7 @@ else
 fi
 
 # 6. Install Microsoft Fonts (Consolas, etc.)
-echo -e "\n${CYAN}[6/7] Installing Microsoft Fonts (Consolas, etc.)...${NC}"
+echo -e "\n${CYAN}[6/8] Installing Microsoft Fonts (Consolas, etc.)...${NC}"
 if ! rpm -q msttcore-fonts-installer &>/dev/null; then
     echo -e "${YELLOW}Installing cabextract and msttcore-fonts-installer...${NC}"
     sudo dnf install -y cabextract --disablerepo="gustavosett-clipboard-manager*"
@@ -112,7 +112,7 @@ else
 fi
 
 # 7. Configure Ptyxis (Default Terminal) with Material Theme Darker
-echo -e "\n${CYAN}[7/7] Configuring Ptyxis (Default Terminal) with Material Theme Darker and Ctrl+T shortcut...${NC}"
+echo -e "\n${CYAN}[7/8] Configuring Ptyxis (Default Terminal) with Material Theme Darker and Ctrl+T shortcut...${NC}"
 PTYXIS_PALETTES_DIR="$HOME/.local/share/org.gnome.Ptyxis/palettes"
 mkdir -p "$PTYXIS_PALETTES_DIR"
 cp "$SCRIPT_DIR/configs/ptyxis/Material-Theme-Darker.palette" "$PTYXIS_PALETTES_DIR/"
@@ -133,6 +133,14 @@ echo -e "${GREEN}✅ Configured Ctrl+T to open a new tab in Ptyxis.${NC}"
 gsettings set org.gnome.Ptyxis.Shortcuts move-previous-tab '<ctrl><shift>Left'
 gsettings set org.gnome.Ptyxis.Shortcuts move-next-tab '<ctrl><shift>Right'
 echo -e "${GREEN}✅ Configured Shift+Ctrl+Left and Shift+Ctrl+Right to navigate tabs in Ptyxis.${NC}"
+
+# 8. Configure GNOME Shell Keybindings (Super+Number to open new window)
+echo -e "\n${CYAN}[8/8] Configuring GNOME Shell Keybindings (Super+Number to open new window)...${NC}"
+for i in {1..9}; do
+    gsettings set org.gnome.shell.keybindings switch-to-application-$i "[]"
+    gsettings set org.gnome.shell.keybindings open-new-window-application-$i "['<Super>$i']"
+done
+echo -e "${GREEN}✅ Configured Super+1 to Super+9 to open new window instead of focusing application.${NC}"
 
 echo -e "\n${BANNER}                          ${NC}"
 echo -e "${BANNER}  Installation Complete!  ${NC}"
